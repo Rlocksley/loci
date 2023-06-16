@@ -1,0 +1,42 @@
+#version 460
+#extension GL_EXT_ray_tracing : enable
+#extension GL_GOOGLE_include_directive : enable
+#extension GL_EXT_shader_explicit_arithmetic_types_int64 : enable
+#extension GL_EXT_scalar_block_layout : enable
+#extension GL_EXT_buffer_reference2 : enable
+
+#include "structs.glsl"
+
+layout(binding = 0, set = 0) uniform accelerationStructureEXT topLevelAS;
+layout(binding = 1, set = 0, rgba8) uniform image2D image;
+layout(binding = 2, set = 0) uniform Camera
+{
+    vec4 position;
+    vec4 direction;
+    mat4 invView;
+    mat4 invProj;
+    vec4 clip;
+} camera;
+
+layout(location = 0) rayPayloadEXT Payload payload;
+
+layout( push_constant ) uniform constants
+{
+	uint32_t numberPointLights;
+} pushConstants;
+
+void main()
+{
+    const vec2 pixelCenter = vec2(gl_LaunchIDEXT.xy) + vec2(0.5);
+    const vec2 inUV = pixelCenter/vec2(gl_LaunchSizeEXT.xy);
+    vec2 d = inUV * 2.0 - 1.0;
+
+    vec4 origin = camera.invView * vec4(0,0,0,1);
+    vec4 target = camera.invProj * vec4(d.x,d.y,1,1);
+    vec4 direction = camera.invView*vec4(normalize(target.xyz),0);
+
+    payload.hitValue = vec3(0.0);
+    traceRayEXT(topLevelAS, gl_RayFlagsOpaqueEXT, 0xff, 0,0,0, origin.xyz, camera.clip[0], direction.xyz, camera.clip[1], 0);
+
+    imageStore(image, ivec2(gl_LaunchIDEXT.xy), vec4(payload.hitValue, 0.0));
+}
