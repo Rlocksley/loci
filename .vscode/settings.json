@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "loci_descriptorset.h": "c",
+        "loci_world.h": "c",
+        "loci_mesh.h": "c",
+        "loci_core.h": "c",
+        "loci_ecs.h": "c",
+        "loci_sphere.h": "c",
+        "loci_tetra.h": "c"
+    }
+}

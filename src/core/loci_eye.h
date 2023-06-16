@@ -1,7 +1,7 @@
-#ifndef LOCI_BUFFER_H
-#define LOCI_BUFFER_H
+#ifndef LOCI_EYE_H
+#define LOCI_EYE_H
+
 #include "loci_buffer.h"
-#endif
 
 Loci_BufferInterface loci_eyeBuffer;
 
@@ -16,8 +16,4 @@ typedef struct Loci_Eye
 
 void loci_writeToEyeBuffer(Loci_Eye* pEye);
 
-
-void loci_writeToEyeBuffer(Loci_Eye* pEye)
-{
-    memcpy(loci_eyeBuffer.pMemory, pEye, sizeof(Loci_Eye));
-}
+#endif

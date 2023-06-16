@@ -1,3 +1,6 @@
+#ifndef LOCI_WORLD_H
+#define LOCI_WORLD_H
+
 #include "./flecs/flecs.h"
 
 //flec world
@@ -76,3 +79,5 @@ ecs_entity_t loci_isModelOfTexture;
 {\
     ecs_remove_pair(loci_pWorld, entity0, pairEntity, entity1);\
 }
+
+#endif

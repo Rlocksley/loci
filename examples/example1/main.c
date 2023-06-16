@@ -1,23 +1,7 @@
-#ifndef LOCI_CORE_H
-#define LOCI_CORE_H
 #include "../../src/core/loci_core.h"
-#endif
-#ifndef LOCI_ECS_H
-#define LOCI_ECS_H
 #include "../../src/ecs/loci_ecs.h"
-#endif
-#ifndef LOCI_SPHERE_H
-#define LOCI_SPHERE_H
 #include "../../src/shapes/loci_sphere.h"
-#endif
-#ifndef LOCI_TETRA_H
-#define LOCI_TETRA_H
-#include "../../src/shapes/loci_tetra.h"
-#endif
-#ifndef LOCI_CUBE_H
-#define LOCI_CUBE_H
 #include "../../src/shapes/loci_cube.h"
-#endif
 
 #define random() ((float)rand())/((float)RAND_MAX)
 

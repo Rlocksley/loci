@@ -1,3 +1,6 @@
+#ifndef LOCI_GLOBAL_H
+#define LOCI_GLOBAL_H
+
 #define LOCI_DEBUG
 
 #define GLFW_INCLUDE_VULKAN
@@ -33,3 +36,5 @@
         exit(1);\
     }\
 }
+
+#endif
