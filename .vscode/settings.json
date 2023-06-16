@@ -6,6 +6,9 @@
         "loci_core.h": "c",
         "loci_ecs.h": "c",
         "loci_sphere.h": "c",
-        "loci_tetra.h": "c"
+        "loci_tetra.h": "c",
+        "loci_gltf.h": "c",
+        "loci_cube.h": "c",
+        "loci_buffer.h": "c"
     }
 }

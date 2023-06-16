@@ -1,5 +1,17 @@
 #include "loci_physicalDevice.h"
 
+uint32_t loci_queueFamilyIndex;
+VkSurfaceFormatKHR loci_vkSurfaceFormatKHR;
+VkPresentModeKHR loci_vkPresentModeKHR;
+VkExtent2D loci_vkExtent2D;
+VkPhysicalDeviceFeatures loci_vkPhysicalDeviceFeatures;
+VkPhysicalDeviceProperties loci_vkPhysicalDeviceProperties;
+VkPhysicalDeviceRayTracingPipelinePropertiesKHR loci_vkPhysicalDeviceRayTracingPipelinePropertiesKHR;
+VkPhysicalDeviceMemoryProperties loci_vkPhysicalDeviceMemoryProperties;
+VkSurfaceCapabilitiesKHR loci_vkSurfaceCapabilitiesKHR;
+
+VkPhysicalDevice loci_vkPhysicalDevice;
+
 bool loci_physicalDeviceIsComputeGraphicsPresent(VkPhysicalDevice device)
 {
     uint32_t numberPropertiess;

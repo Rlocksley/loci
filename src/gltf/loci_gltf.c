@@ -1,5 +1,8 @@
 #include "loci_gltf.h"
 
+#define CGLTF_IMPLEMENTATION
+#include "./cgltf/cgltf.h"
+
 const cgltf_node* loci_findNodeContainingMesh(const cgltf_data* data, const cgltf_mesh* mesh) {
     for (cgltf_size i = 0; i < data->nodes_count; ++i) {
         const cgltf_node* node = &data->nodes[i];

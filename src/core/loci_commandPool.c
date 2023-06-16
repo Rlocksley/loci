@@ -1,5 +1,7 @@
 #include "loci_commandPool.h"
 
+VkCommandPool loci_vkCommandPool;
+
 void loci_createCommandPool()
 {
     VkCommandPoolCreateInfo createInfo;

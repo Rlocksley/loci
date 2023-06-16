@@ -3,11 +3,11 @@
 
 #include "loci_window.h"
 
-float loci_minDeltaTime;
-float loci_maxDeltaTime;
-float loci_startTime;
-float loci_time;
-float loci_deltaTime;
+extern float loci_minDeltaTime;
+extern float loci_maxDeltaTime;
+extern float loci_startTime;
+extern float loci_time;
+extern float loci_deltaTime;
 
 
 void loci_createTime();

@@ -1,5 +1,20 @@
 #include "loci_instance.h"
 
+const char* loci_applicationName;
+
+
+VkInstance loci_vkInstance;
+
+#ifdef LOCI_DEBUG
+
+uint32_t loci_numberValidationLayers = 1;
+const char* loci_ppValidationLayers[1] = 
+{"VK_LAYER_KHRONOS_validation"};
+
+VkDebugUtilsMessengerEXT loci_vkDebugUtilsMessengerEXT;
+#endif
+
+
 VKAPI_ATTR VkBool32 VKAPI_CALL loci_debugCallback
 (VkDebugUtilsMessageSeverityFlagBitsEXT severity,
 VkDebugUtilsMessageTypeFlagsEXT type,

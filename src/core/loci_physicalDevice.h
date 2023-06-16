@@ -4,18 +4,18 @@
 #include "loci_surface.h"
 
 //PhysicalDevice Info
-uint32_t loci_queueFamilyIndex;
-VkSurfaceFormatKHR loci_vkSurfaceFormatKHR;
-VkPresentModeKHR loci_vkPresentModeKHR;
-VkExtent2D loci_vkExtent2D;
-VkPhysicalDeviceFeatures loci_vkPhysicalDeviceFeatures;
-VkPhysicalDeviceProperties loci_vkPhysicalDeviceProperties;
-VkPhysicalDeviceRayTracingPipelinePropertiesKHR loci_vkPhysicalDeviceRayTracingPipelinePropertiesKHR;
-VkPhysicalDeviceMemoryProperties loci_vkPhysicalDeviceMemoryProperties;
-VkSurfaceCapabilitiesKHR loci_vkSurfaceCapabilitiesKHR;
+extern uint32_t loci_queueFamilyIndex;
+extern VkSurfaceFormatKHR loci_vkSurfaceFormatKHR;
+extern VkPresentModeKHR loci_vkPresentModeKHR;
+extern VkExtent2D loci_vkExtent2D;
+extern VkPhysicalDeviceFeatures loci_vkPhysicalDeviceFeatures;
+extern VkPhysicalDeviceProperties loci_vkPhysicalDeviceProperties;
+extern VkPhysicalDeviceRayTracingPipelinePropertiesKHR loci_vkPhysicalDeviceRayTracingPipelinePropertiesKHR;
+extern VkPhysicalDeviceMemoryProperties loci_vkPhysicalDeviceMemoryProperties;
+extern VkSurfaceCapabilitiesKHR loci_vkSurfaceCapabilitiesKHR;
 
 //PhysicalDevice
-VkPhysicalDevice loci_vkPhysicalDevice;
+extern VkPhysicalDevice loci_vkPhysicalDevice;
 
 void loci_pickPhysicalDevice();
 uint32_t loci_findMemoryType

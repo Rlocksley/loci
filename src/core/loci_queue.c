@@ -1,5 +1,7 @@
 #include "loci_queue.h"
 
+VkQueue loci_vkQueue;
+
 void loci_getQueue()
 {
     vkGetDeviceQueue

@@ -1,27 +1,8 @@
-#ifndef LOCI_CORE_H
-#define LOCI_CORE_H
 #include "../../src/core/loci_core.h"
-#endif
-#ifndef LOCI_ECS_H
-#define LOCI_ECS_H
 #include "../../src/ecs/loci_ecs.h"
-#endif
-#ifndef LOCI_SPHERE_H
-#define LOCI_SPHERE_H
 #include "../../src/shapes/loci_sphere.h"
-#endif
-#ifndef LOCI_TETRA_H
-#define LOCI_TETRA_H
-#include "../../src/shapes/loci_tetra.h"
-#endif
-#ifndef LOCI_CUBE_H
-#define LOCI_CUBE_H
 #include "../../src/shapes/loci_cube.h"
-#endif
-#ifndef LOCI_GLTF_H
-#define LOCI_GLTF_H
 #include "../../src/gltf/loci_gltf.h"
-#endif
 
 #define random() ((float)rand())/((float)RAND_MAX)
 
@@ -43,16 +24,18 @@ int main()
 
     loci_createCore();
 
+
     Loci_Shader genShader =  
-    loci_createShader("../../src/shaders/genShader.spv");
+    loci_createShader("your/Path/to/loci/src/shaders/genShader.spv");
     Loci_Shader missShader[3] = 
-    {loci_createShader("../../src/shaders/missShader.spv"),
-    loci_createShader("../../src/shaders/missShadowShader.spv"),
-    loci_createShader("../../src/shaders/missReflectionShader.spv")};
+    {loci_createShader("your/Path/to/loci/src/shaders/missShader.spv"),
+    loci_createShader("your/Path/to/loci/src/shaders/missShadowShader.spv"),
+    loci_createShader("your/Path/to/loci/src/shaders/missReflectionShader.spv")};
     Loci_Shader chitShader[3] = 
-    {loci_createShader("../../src/shaders/chitShader.spv"),
-    loci_createShader("../../src/shaders/chitShadowShader.spv"),
-    loci_createShader("../../src/shaders/chitReflectionShader.spv")};
+    {loci_createShader("your/Path/to/loci/src/shaders/chitShader.spv"),
+    loci_createShader("your/Path/to/loci/src/shaders/chitShadowShader.spv"),
+    loci_createShader("your/Path/to/loci/loci/src/shaders/chitReflectionShader.spv")};
+
 
     Loci_FlyingCamera camera = 
     loci_createFlyingCamera

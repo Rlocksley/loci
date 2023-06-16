@@ -1,5 +1,7 @@
 #include "loci_swapchain.h"
 
+Loci_Swapchain loci_swapchain;
+
 void loci_createSwapchain()
 {
     const uint32_t minImageCount = 

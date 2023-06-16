@@ -12,7 +12,7 @@ typedef struct Loci_Cube
     uint32_t* pIndices;
 }Loci_Cube;
 
-Loci_Cube loci_createCube(float width, float height, float depth, vec3 color)
+Loci_Cube loci_createCube(float width, float height, float depth, vec3 color);
 void loci_destroyCube(Loci_Cube cube);
 
 #endif

@@ -3,8 +3,8 @@
 
 #include "loci_device.h"
 
-VkFence loci_buildVkFence;
-VkFence loci_drawVkFence;
+extern VkFence loci_buildVkFence;
+extern VkFence loci_drawVkFence;
 
 void loci_createFence(VkFence* pFence, VkFenceCreateFlags flags);
 void loci_destroyFence(VkFence fence);

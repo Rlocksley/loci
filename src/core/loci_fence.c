@@ -1,6 +1,7 @@
 #include "loci_fence.h"
 
-
+VkFence loci_buildVkFence;
+VkFence loci_drawVkFence;
 
 void loci_createFence(VkFence* pFence, VkFenceCreateFlags flags)
 {

@@ -1,6 +1,13 @@
 #include "loci_commandBuffer.h"
 
 
+VkCommandBuffer loci_buildVkCommandBuffer;
+VkCommandBuffer loci_animationUpdateVkCommandBuffer;
+VkCommandBuffer loci_bottomAccelerationUpdateVkCommandBuffer;
+VkCommandBuffer loci_topAccelerationUpdateVkCommandBuffer;
+VkCommandBuffer loci_drawVkCommandBuffer;
+
+
 void loci_createCommandBuffer(VkCommandBuffer* pCommandBuffer)
 {
     VkCommandBufferAllocateInfo allocInfo;

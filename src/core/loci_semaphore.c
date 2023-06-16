@@ -1,5 +1,10 @@
 #include "loci_semaphore.h"
 
+VkSemaphore loci_imageIndexVkSemaphore;
+VkSemaphore loci_animationUpdateVkSemaphore;
+VkSemaphore loci_bottomAccelerationUpdateVkSemaphore;
+VkSemaphore loci_topAccelerationUpdateVkSemaphore;
+VkSemaphore loci_drawVkSemaphore;
 
 void loci_createSemaphore(VkSemaphore* pSemaphore)
 {

@@ -68,5 +68,6 @@ void loci_updateScene(ecs_entity_t entity);
 void loci_spawnInScene(ecs_entity_t entity, ecs_entity_t scene);
 void loci_despawnInScene(ecs_entity_t entity, ecs_entity_t scene);
 void loci_drawScene(ecs_entity_t entity);
+void loci_destroyScene(ecs_entity_t entity);
 
 #endif

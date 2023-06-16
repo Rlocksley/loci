@@ -11,20 +11,20 @@ typedef struct Loci_Input
 }Loci_Key,
 Loci_Button;
 
-float loci_keyPressTime = 0.5f;
+extern float loci_keyPressTime;
 
-Loci_Key loci_keyA = {false, false, 0.f};
-Loci_Key loci_keyD = {false, false, 0.f};
-Loci_Key loci_keyS = {false, false, 0.f};
-Loci_Key loci_keyW = {false, false, 0.f};
-Loci_Key loci_keyX = {false, false, 0.f};
+extern Loci_Key loci_keyA;
+extern Loci_Key loci_keyD;
+extern Loci_Key loci_keyS;
+extern Loci_Key loci_keyW;
+extern Loci_Key loci_keyX;
 
 void loci_updateKeys();
 
-float loci_buttonPressTime = 0.2f;
+extern float loci_buttonPressTime;
 
-Loci_Button loci_buttonLeft = {false, false, 0.f};
-Loci_Button loci_buttonRight = {false, false, 0.f};
+extern Loci_Button loci_buttonLeft;
+extern Loci_Button loci_buttonRight;
 
 void loci_updateButtons();
 
@@ -34,7 +34,7 @@ typedef struct Loci_Cursor
     vec2 deltaPosition;
 }Loci_Cursor;
 
-Loci_Cursor loci_cursor;
+extern Loci_Cursor loci_cursor;
 
 void loci_createCursor();
 void loci_updateCursor();

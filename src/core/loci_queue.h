@@ -4,7 +4,7 @@
 #include "loci_device.h"
 #include "loci_swapchain.h"
 
-VkQueue loci_vkQueue;
+extern VkQueue loci_vkQueue;
 
 void loci_getQueue();
 

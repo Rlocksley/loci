@@ -24,15 +24,15 @@ int main()
     loci_createCore();
 
     Loci_Shader genShader =  
-    loci_createShader("../../src/shaders/genShader.spv");
+    loci_createShader("your/Path/to/loci/src/shaders/genShader.spv");
     Loci_Shader missShader[3] = 
-    {loci_createShader("../../src/shaders/missShader.spv"),
-    loci_createShader("../../src/shaders/missShadowShader.spv"),
-    loci_createShader("../../src/shaders/missReflectionShader.spv")};
+    {loci_createShader("your/Path/to/loci/src/shaders/missShader.spv"),
+    loci_createShader("your/Path/to/loci/src/shaders/missShadowShader.spv"),
+    loci_createShader("your/Path/to/loci/src/shaders/missReflectionShader.spv")};
     Loci_Shader chitShader[3] = 
-    {loci_createShader("../../src/shaders/chitShader.spv"),
-    loci_createShader("../../src/shaders/chitShadowShader.spv"),
-    loci_createShader("../../src/shaders/chitReflectionShader.spv")};
+    {loci_createShader("your/Path/to/loci/src/shaders/chitShader.spv"),
+    loci_createShader("your/Path/to/loci/src/shaders/chitShadowShader.spv"),
+    loci_createShader("your/Path/to/loci/loci/src/shaders/chitReflectionShader.spv")};
 
     Loci_FlyingCamera camera = 
     loci_createFlyingCamera
@@ -56,7 +56,7 @@ int main()
     shape0.pIndices, shape0.numberIndices,
     identity);
     
-    loci_createTexture(sky, "filePath/to/your/texture");
+    loci_createTexture(sky, "/home/robin/Desktop/Github/Loki/src/test/Metal007_1K_Color.jpg");
 
     ecs_entity_t baseCube = loci_createEntity();
     Loci_Cube cubeShape = loci_createCube(10, 10, 10, (vec3){0.8f, 0.8f, 0.8f});
@@ -65,7 +65,7 @@ int main()
     cubeShape.pVertices, cubeShape.numberVertices,
     cubeShape.pIndices, cubeShape.numberIndices,
     identity);
-    loci_createTexture(baseCube, "filePath/to/you/texture");
+    loci_createTexture(baseCube, "/home/robin/Desktop/Github/Loki/src/test/Bronze03_1K_BaseColor.png");
 
     srand(time(NULL));
     ecs_entity_t cubes[numberCubes][numberCubes];

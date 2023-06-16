@@ -4,18 +4,17 @@
 #include "loci_global.h"
 
 
-const char* loci_applicationName;
+extern const char* loci_applicationName;
 
 
-VkInstance loci_vkInstance;
+extern VkInstance loci_vkInstance;
 
 #ifdef LOCI_DEBUG
 
-uint32_t loci_numberValidationLayers = 1;
-const char* loci_ppValidationLayers[1] = 
-{"VK_LAYER_KHRONOS_validation"};
+extern uint32_t loci_numberValidationLayers;
+extern const char* loci_ppValidationLayers[1];
 
-VkDebugUtilsMessengerEXT loci_vkDebugUtilsMessengerEXT;
+extern VkDebugUtilsMessengerEXT loci_vkDebugUtilsMessengerEXT;
 #endif
 
 

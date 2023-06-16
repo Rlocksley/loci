@@ -14,15 +14,14 @@ typedef struct Loci_RayImage
     VkDeviceMemory vkDeviceMemory;
 }Loci_RayImage;
 
-Loci_RayImage loci_rayImage;
+extern Loci_RayImage loci_rayImage;
 
 
 void loci_createRayImage();
 void loci_destroyRayImage();
 
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "./stb/stb_image.h"
+
 
 typedef struct Loci_Image
 {

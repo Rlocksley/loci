@@ -1,5 +1,7 @@
 #include "loci_surface.h"
 
+VkSurfaceKHR loci_vkSurfaceKHR;
+
 void loci_createSurface()
 {
     LOCI_CHECK_VULKAN

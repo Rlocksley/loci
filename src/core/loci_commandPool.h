@@ -3,7 +3,7 @@
 
 #include "loci_device.h"
 
-VkCommandPool loci_vkCommandPool;
+extern VkCommandPool loci_vkCommandPool;
 
 void loci_createCommandPool();
 void loci_destroyCommandPool();

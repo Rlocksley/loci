@@ -1,5 +1,22 @@
 #include "loci_input.h"
 
+float loci_keyPressTime = 0.5f;
+
+Loci_Key loci_keyA = {false, false, 0.f};
+Loci_Key loci_keyD = {false, false, 0.f};
+Loci_Key loci_keyS = {false, false, 0.f};
+Loci_Key loci_keyW = {false, false, 0.f};
+Loci_Key loci_keyX = {false, false, 0.f};
+
+void loci_updateKeys();
+
+float loci_buttonPressTime = 0.2f;
+
+Loci_Button loci_buttonLeft = {false, false, 0.f};
+Loci_Button loci_buttonRight = {false, false, 0.f};
+
+
+Loci_Cursor loci_cursor;
 
 void loci_updateKeys()
 {

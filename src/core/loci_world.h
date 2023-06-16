@@ -4,13 +4,13 @@
 #include "./flecs/flecs.h"
 
 //flec world
-ecs_world_t* loci_pWorld;
+extern ecs_world_t* loci_pWorld;
 
 //Pairs
-ecs_entity_t loci_spawnedIn;
-bool loci_spawned = false;
-ecs_entity_t loci_isModelOfMesh;
-ecs_entity_t loci_isModelOfTexture;
+extern ecs_entity_t loci_spawnedIn;
+extern bool loci_spawned;
+extern ecs_entity_t loci_isModelOfMesh;
+extern ecs_entity_t loci_isModelOfTexture;
 
 #define loci_createWorld()\
 {\

@@ -3,7 +3,7 @@
 
 #include "loci_buffer.h"
 
-Loci_BufferInterface loci_eyeBuffer;
+extern Loci_BufferInterface loci_eyeBuffer;
 
 typedef struct Loci_Eye
 {

@@ -9,6 +9,6 @@ typedef struct Loci_Tetra
     uint32_t indices[12];
 }Loci_Tetra;
 
-Loci_Tetra loci_createTetra()
+Loci_Tetra loci_createTetra();
 
 #endif

@@ -3,11 +3,11 @@
 
 #include "loci_commandPool.h"
 
-VkCommandBuffer loci_buildVkCommandBuffer;
-VkCommandBuffer loci_animationUpdateVkCommandBuffer;
-VkCommandBuffer loci_bottomAccelerationUpdateVkCommandBuffer;
-VkCommandBuffer loci_topAccelerationUpdateVkCommandBuffer;
-VkCommandBuffer loci_drawVkCommandBuffer;
+extern VkCommandBuffer loci_buildVkCommandBuffer;
+extern VkCommandBuffer loci_animationUpdateVkCommandBuffer;
+extern VkCommandBuffer loci_bottomAccelerationUpdateVkCommandBuffer;
+extern VkCommandBuffer loci_topAccelerationUpdateVkCommandBuffer;
+extern VkCommandBuffer loci_drawVkCommandBuffer;
 
 void loci_createCommandBuffer(VkCommandBuffer* pCommandBuffer);
 void loci_destroyCommandBuffer(VkCommandBuffer* pCommandBuffer);

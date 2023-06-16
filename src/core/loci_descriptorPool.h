@@ -3,14 +3,14 @@
 
 #include "loci_device.h"
 
-uint32_t loci_maxNumberUniformBuffers;
-uint32_t loci_maxNumberStorageBuffers;
-uint32_t loci_maxNumberCombinedImageSamplers;
-uint32_t loci_maxNumberStorageImages; 
-uint32_t loci_maxNumberTopAccelerations;
-uint32_t loci_maxNumberDescriptorSets;
+extern uint32_t loci_maxNumberUniformBuffers;
+extern uint32_t loci_maxNumberStorageBuffers;
+extern uint32_t loci_maxNumberCombinedImageSamplers;
+extern uint32_t loci_maxNumberStorageImages; 
+extern uint32_t loci_maxNumberTopAccelerations;
+extern uint32_t loci_maxNumberDescriptorSets;
     
-VkDescriptorPool loci_vkDescriptorPool;
+extern VkDescriptorPool loci_vkDescriptorPool;
 
 void loci_createDescriptorPool();
 void loci_destroyDescriptorPool();

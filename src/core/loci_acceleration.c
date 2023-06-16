@@ -114,7 +114,8 @@ Loci_TopAcceleration loci_createTopAcceleration
     VkAccelerationStructureDeviceAddressInfoKHR addressInfo;  
     addressInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR;
     addressInfo.accelerationStructure = acceleration.vkAccelerationStructureKHR;
-
+    addressInfo.pNext = NULL;
+    
     acceleration.deviceAddress = 
     loci_vkGetAccelerationStructureDeviceAddressKHR
     (loci_vkDevice, &addressInfo);

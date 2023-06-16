@@ -13,7 +13,7 @@ typedef struct Loci_Swapchain
     uint32_t imageIndex;
 }Loci_Swapchain;
 
-Loci_Swapchain loci_swapchain;
+extern Loci_Swapchain loci_swapchain;
 
 void loci_createSwapchain();
 void loci_destroySwapchain();

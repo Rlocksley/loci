@@ -3,11 +3,11 @@
 
 #include "loci_device.h"
 
-VkSemaphore loci_imageIndexVkSemaphore;
-VkSemaphore loci_animationUpdateVkSemaphore;
-VkSemaphore loci_bottomAccelerationUpdateVkSemaphore;
-VkSemaphore loci_topAccelerationUpdateVkSemaphore;
-VkSemaphore loci_drawVkSemaphore;
+extern VkSemaphore loci_imageIndexVkSemaphore;
+extern VkSemaphore loci_animationUpdateVkSemaphore;
+extern VkSemaphore loci_bottomAccelerationUpdateVkSemaphore;
+extern VkSemaphore loci_topAccelerationUpdateVkSemaphore;
+extern VkSemaphore loci_drawVkSemaphore;
 
 void loci_createSemaphore(VkSemaphore* pSemaphore);
 void loci_destroySemaphore(VkSemaphore semaphore);

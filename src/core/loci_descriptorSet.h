@@ -12,8 +12,6 @@ typedef struct Loci_RayDescriptorSet
     VkDescriptorSet vkDescriptorSet;
 }Loci_RayDescriptorSet;
 
-Loci_RayDescriptorSet loci_rayDescriptorSet;
-
 Loci_RayDescriptorSet loci_createRayDescriptorSet
 (uint32_t maxNumberImages);
 void loci_destroyRayDescriptorSet(Loci_RayDescriptorSet descriptorSet);
