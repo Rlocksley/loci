@@ -26,4 +26,16 @@ Loci_BufferInterface objectBuffer, uint32_t numberObjects,
 Loci_Image images[], uint32_t numberImages,
 Loci_BufferInterface pointLightBuffer);
 
+typedef struct Loci_SkeletonDescriptorSet
+{
+    VkDescriptorSetLayout vkDescriptorSetLayout;
+    VkDescriptorSet vkDescriptorSet;
+}Loci_SkeletonDescriptorSet;
+
+Loci_SkeletonDescriptorSet loci_createSkeletonDescriptorSet
+(Loci_Buffer vertexBuffer, 
+Loci_Buffer skeletonVertexBuffer, Loci_BufferInterface bonesBuffer);
+void loci_destroySkeletonDescriptorSet(Loci_SkeletonDescriptorSet descriptorSet);
+
+
 #endif

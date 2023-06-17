@@ -23,4 +23,18 @@ Loci_Shader closestHitShader[], uint32_t numberClosestHitShader,
 uint32_t maxRecursionDepth);
 void loci_destroyRayPipeline(Loci_RayPipeline pipeline);
 
+typedef struct Loci_SkeletonPipelinePushConstants
+{
+    uint32_t numberBones;
+}Loci_SkeletonPipelinePushConstants;
+
+typedef struct Loci_SkeletonPipeline
+{
+    VkPipelineLayout vkPipelineLayout;
+    VkPipeline vkPipeline;
+}Loci_SkeletonPipeline;
+
+Loci_SkeletonPipeline loci_createSkeletonPipeline
+(Loci_SkeletonDescriptorSet descriptorSet);
+
 #endif

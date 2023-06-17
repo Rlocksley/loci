@@ -20,19 +20,20 @@ int main()
     loci_maxNumberStorageImages = 10;
     loci_maxNumberTopAccelerations = 1;
     loci_maxNumberDescriptorSets = 10;
+    loci_pShaderDirectory = "/your/path/to/shader/directory";
 
     loci_createCore();
 
     Loci_Shader genShader =  
-    loci_createShader("your/Path/to/loci/src/shaders/genShader.spv");
+    loci_createShader("genShader.spv");
     Loci_Shader missShader[3] = 
-    {loci_createShader("your/Path/to/loci/src/shaders/missShader.spv"),
-    loci_createShader("your/Path/to/loci/src/shaders/missShadowShader.spv"),
-    loci_createShader("your/Path/to/loci/src/shaders/missReflectionShader.spv")};
+    {loci_createShader("missShader.spv"),
+    loci_createShader("missShadowShader.spv"),
+    loci_createShader("missReflectionShader.spv")};
     Loci_Shader chitShader[3] = 
-    {loci_createShader("your/Path/to/loci/src/shaders/chitShader.spv"),
-    loci_createShader("your/Path/to/loci/src/shaders/chitShadowShader.spv"),
-    loci_createShader("your/Path/to/loci/loci/src/shaders/chitReflectionShader.spv")};
+    {loci_createShader("chitShader.spv"),
+    loci_createShader("chitShadowShader.spv"),
+    loci_createShader("chitReflectionShader.spv")};
 
     Loci_FlyingCamera camera = 
     loci_createFlyingCamera
@@ -56,7 +57,7 @@ int main()
     shape0.pIndices, shape0.numberIndices,
     identity);
     
-    loci_createTexture(sky, "/path/to/your/texture");
+    loci_createTexture(sky, "/your/path/to/texture");
 
     ecs_entity_t baseCube = loci_createEntity();
     Loci_Cube cubeShape = loci_createCube(10, 10, 10, (vec3){0.8f, 0.8f, 0.8f});
@@ -65,7 +66,7 @@ int main()
     cubeShape.pVertices, cubeShape.numberVertices,
     cubeShape.pIndices, cubeShape.numberIndices,
     identity);
-    loci_createTexture(baseCube, "/path/to/your/texture");
+    loci_createTexture(baseCube, "/your/path/to/texture");
 
     srand(time(NULL));
     ecs_entity_t cubes[numberCubes][numberCubes];
@@ -86,11 +87,11 @@ int main()
 
 
     ecs_entity_t light = loci_createEntity()
-    loci_createTransform(light, (vec3){0.f,0.f,0.f}, 0.f, (vec3){0.f,1.f,0.f},(vec3){0.f, -200.f, 0.f});
+    loci_createTransform(light, (vec3){1.f,1.f,1.f}, 0.f, (vec3){0.f,1.f,0.f},(vec3){0.f, -200.f, 0.f});
     loci_createPointLight(light, (vec3){1.f,1.f,1.f});
 
     ecs_entity_t light2 = loci_createEntity()
-    loci_createTransform(light2, (vec3){0.f,0.f,0.f}, 0.f, (vec3){0.f,1.f,0.f},(vec3){0.f, -200.f, 400.f});
+    loci_createTransform(light2, (vec3){1.f,1.f,1.f}, 0.f, (vec3){0.f,1.f,0.f},(vec3){0.f, 2000.f, 400.f});
     loci_createPointLight(light2, (vec3){1.f,1.f,1.f});
 
     ecs_entity_t scene = loci_createEntity()
@@ -111,7 +112,6 @@ int main()
     }
     loci_spawnInScene(light, scene);
 
-    printf("before Loop\n");
     bool isLight2 = false;
 
     //Loop
@@ -152,6 +152,13 @@ int main()
     loci_destroyTexture(sky);
     loci_destroyMesh(sky);
     loci_destroyTransform(sky);
+
+    for(uint32_t i = 0; i < 3; i++)
+    {
+        loci_destroyShader(chitShader[i]);
+        loci_destroyShader(missShader[i]);
+    }
+    loci_destroyShader(genShader);
 
     loci_destroyCore();
 }

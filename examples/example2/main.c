@@ -21,26 +21,26 @@ int main()
     loci_maxNumberStorageImages = 10;
     loci_maxNumberTopAccelerations = 1;
     loci_maxNumberDescriptorSets = 10;
+    loci_pShaderDirectory = "/your/path/to/shader/directory";
 
     loci_createCore();
 
-
     Loci_Shader genShader =  
-    loci_createShader("/path/to/loci/src/shaders/genShader.spv");
+    loci_createShader("genShader.spv");
     Loci_Shader missShader[3] = 
-    {loci_createShader("/path/to/loci/src/shaders/missShader.spv"),
-    loci_createShader("/path/to/loci/src/shaders/missShadowShader.spv"),
-    loci_createShader("/path/to/loci/src/shaders/missReflectionShader.spv")};
+    {loci_createShader("missShader.spv"),
+    loci_createShader("missShadowShader.spv"),
+    loci_createShader("missReflectionShader.spv")};
     Loci_Shader chitShader[3] = 
-    {loci_createShader("/path/to/loci/src/shaders/chitShader.spv"),
-    loci_createShader("/path/to/loci/src/shaders/chitShadowShader.spv"),
-    loci_createShader("/path/to/loci/src/shaders/chitReflectionShader.spv")};
+    {loci_createShader("chitShader.spv"),
+    loci_createShader("chitShadowShader.spv"),
+    loci_createShader("chitReflectionShader.spv")};
 
 
     Loci_FlyingCamera camera = 
     loci_createFlyingCamera
     ((vec3){0.f,0.f,0.f}, (vec2){0.f,0.f},
-    10.f, 0.01f, 3.14f/3.f, 0.01f, 100000.f);
+    100.f, 0.01f, 3.14f/3.f, 0.01f, 100000.f);
 
     //Scene
     ecs_entity_t scene = loci_createEntity()
@@ -61,7 +61,7 @@ int main()
     shape0.pVertices,shape0.numberVertices,
     shape0.pIndices, shape0.numberIndices,
     identity);
-    loci_createTexture(sky, "/Path/to/your/texture");
+    loci_createTexture(sky, "/your/texture/filePath");
 
 
     
@@ -75,9 +75,9 @@ int main()
     loci_createPointLight(light2, (vec3){1.f,1.f,1.f});
 
     ecs_entity_t model = loci_createEntity()
-    loci_createMeshModel(model,"/Path/to/your/GLTF/Directory/", 
-    "/Path/to/your/GLTF/File.gltf",
-    (vec3){0.6f,0.6f,0.6f}, 0.3f, 0.8f, 0.2f);
+    loci_createMeshModel(model,"/your/GLTF/Model/Directory/", 
+    "/your/GLTF/model.gltf",
+    (vec3){0.6f,0.6f,0.6f}, 0.01f, 0.9f, 0.9f);
 
  
 
@@ -105,6 +105,13 @@ int main()
     loci_destroyTexture(sky);
     loci_destroyMesh(sky);
     loci_destroyTransform(sky);
+
+    for(uint32_t i = 0; i < 3; i++)
+    {
+        loci_destroyShader(chitShader[i]);
+        loci_destroyShader(missShader[i]);
+    }
+    loci_destroyShader(genShader);
 
     loci_destroyCore();
 }

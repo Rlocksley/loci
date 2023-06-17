@@ -1,12 +1,19 @@
 #include "loci_shader.h"
 
+char* loci_pShaderDirectory;
 
-Loci_Shader loci_createShader(const char* filePath)
+Loci_Shader loci_createShader(const char* pShaderName)
 {
-    FILE* pFile = fopen(filePath, "r");
+
+    char* pFilePath = (char*) malloc(strlen(loci_pShaderDirectory) + strlen(pShaderName) + 2);
+    strcpy(pFilePath, loci_pShaderDirectory);
+    memcpy(pFilePath+strlen(loci_pShaderDirectory), "/", 1);
+    strcpy(pFilePath+strlen(loci_pShaderDirectory)+1, pShaderName);
+
+    FILE* pFile = fopen(pFilePath, "r");
     if(pFile == NULL)
     {
-        LOCI_LOGE("createShader", "fopen() failed for", filePath)
+        LOCI_LOGE("createShader", "fopen() failed for", pFilePath)
     }
 
     fseek(pFile, 0L, SEEK_END);
@@ -28,6 +35,8 @@ Loci_Shader loci_createShader(const char* filePath)
     }
 
     fclose(pFile);
+
+    free(pFilePath);
 
     return shader;
 }

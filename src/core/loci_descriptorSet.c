@@ -279,3 +279,136 @@ Loci_BufferInterface pointLightBuffer)
 
     return descriptorSet;
 }
+
+
+
+Loci_SkeletonDescriptorSet loci_createSkeletonDescriptorSet
+(Loci_Buffer vertexBuffer, 
+Loci_Buffer skeletonVertexBuffer, Loci_BufferInterface bonesBuffer)
+{
+    Loci_SkeletonDescriptorSet descriptorSet;
+
+    VkDescriptorSetLayoutBinding bindings[3];
+    bindings[0].binding = 0;
+    bindings[0].descriptorCount = 1;
+    bindings[0].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+    bindings[0].stageFlags = VK_SHADER_STAGE_COMPUTE_BIT;
+    bindings[0].pImmutableSamplers = NULL;
+    bindings[1].binding = 1;
+    bindings[1].descriptorCount = 1;
+    bindings[1].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+    bindings[1].stageFlags = VK_SHADER_STAGE_COMPUTE_BIT;
+    bindings[1].pImmutableSamplers = NULL;
+    bindings[2].binding = 2;
+    bindings[2].descriptorCount = 1;
+    bindings[2].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    bindings[2].stageFlags = VK_SHADER_STAGE_COMPUTE_BIT;
+    bindings[2].pImmutableSamplers = NULL;
+    
+    VkDescriptorSetLayoutCreateInfo layoutInfo;
+    layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    layoutInfo.flags = 0;
+    layoutInfo.bindingCount = 3;
+    layoutInfo.pBindings = bindings;
+    layoutInfo.pNext = NULL;
+
+    LOCI_CHECK_VULKAN
+    (vkCreateDescriptorSetLayout
+    (loci_vkDevice,
+    &layoutInfo, NULL,
+    &descriptorSet.vkDescriptorSetLayout),
+    "createSkeletonDescriptorSet",
+    "vkDescriptorSetLayout")
+
+    VkDescriptorSetAllocateInfo allocInfo;
+    allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    allocInfo.descriptorPool = loci_vkDescriptorPool;
+    allocInfo.descriptorSetCount = 1;
+    allocInfo.pSetLayouts = &descriptorSet.vkDescriptorSetLayout;
+    allocInfo.pNext = NULL;
+
+    LOCI_CHECK_VULKAN
+    (vkAllocateDescriptorSets
+    (loci_vkDevice,
+    &allocInfo,
+    &descriptorSet.vkDescriptorSet),
+    "createSkeletonDescriptorSet",
+    "vkAllocateDescriptorSets")
+
+    VkDescriptorBufferInfo vertexBufferInfo;
+    vertexBufferInfo.buffer = vertexBuffer.vkBuffer;
+    vertexBufferInfo.offset = 0;
+    vertexBufferInfo.range = vertexBuffer.numberElements * vertexBuffer.elementSize;
+
+    VkWriteDescriptorSet vertexBufferWriteInfo;
+    vertexBufferWriteInfo.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    vertexBufferWriteInfo.dstSet = descriptorSet.vkDescriptorSet;
+    vertexBufferWriteInfo.dstBinding = 0;
+    vertexBufferWriteInfo.descriptorCount = 1;
+    vertexBufferWriteInfo.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+    vertexBufferWriteInfo.pBufferInfo = &vertexBufferInfo;
+    vertexBufferWriteInfo.dstArrayElement = 0;
+    vertexBufferWriteInfo.pImageInfo = NULL;
+    vertexBufferWriteInfo.pTexelBufferView = NULL;
+    vertexBufferWriteInfo.pNext = NULL;
+
+    VkDescriptorBufferInfo skeletonVertexBufferInfo;
+    skeletonVertexBufferInfo.buffer = skeletonVertexBuffer.vkBuffer;
+    skeletonVertexBufferInfo.offset = 0;
+    skeletonVertexBufferInfo.range = skeletonVertexBuffer.numberElements * skeletonVertexBuffer.elementSize;
+
+    VkWriteDescriptorSet skeletonVertexBufferWriteInfo;
+    skeletonVertexBufferWriteInfo.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    skeletonVertexBufferWriteInfo.dstSet = descriptorSet.vkDescriptorSet;
+    skeletonVertexBufferWriteInfo.dstBinding = 1;
+    skeletonVertexBufferWriteInfo.descriptorCount = 1;
+    skeletonVertexBufferWriteInfo.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+    skeletonVertexBufferWriteInfo.pBufferInfo = &skeletonVertexBufferInfo;
+    skeletonVertexBufferWriteInfo.dstArrayElement = 0;
+    skeletonVertexBufferWriteInfo.pImageInfo = NULL;
+    skeletonVertexBufferWriteInfo.pTexelBufferView = NULL;
+    skeletonVertexBufferWriteInfo.pNext = NULL;
+
+    VkDescriptorBufferInfo bonesBufferInfo;
+    bonesBufferInfo.buffer = bonesBuffer.vkBuffer;
+    bonesBufferInfo.offset = 0;
+    bonesBufferInfo.range = bonesBuffer.numberElements * bonesBuffer.elementSize;
+
+    VkWriteDescriptorSet bonesBufferWriteInfo;
+    bonesBufferWriteInfo.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    bonesBufferWriteInfo.dstSet = descriptorSet.vkDescriptorSet;
+    bonesBufferWriteInfo.dstBinding = 2;
+    bonesBufferWriteInfo.descriptorCount = 1;
+    bonesBufferWriteInfo.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    bonesBufferWriteInfo.pBufferInfo = &bonesBufferInfo;
+    bonesBufferWriteInfo.dstArrayElement = 0;
+    bonesBufferWriteInfo.pImageInfo = NULL;
+    bonesBufferWriteInfo.pTexelBufferView = NULL;
+    bonesBufferWriteInfo.pNext = NULL;
+
+    VkWriteDescriptorSet writeBuffer[3] = 
+    {
+        vertexBufferWriteInfo,
+        skeletonVertexBufferWriteInfo,
+        bonesBufferWriteInfo
+    };
+
+    vkUpdateDescriptorSets
+    (loci_vkDevice,
+    3, writeBuffer,
+    0, VK_NULL_HANDLE);
+}
+
+void loci_destroySkeletonDescriptorSet
+(Loci_SkeletonDescriptorSet descriptorSet)
+{
+    vkFreeDescriptorSets
+    (loci_vkDevice,
+    loci_vkDescriptorPool,
+    1, &descriptorSet.vkDescriptorSet);
+
+    vkDestroyDescriptorSetLayout
+    (loci_vkDevice,
+    descriptorSet.vkDescriptorSetLayout,
+    NULL);
+}
