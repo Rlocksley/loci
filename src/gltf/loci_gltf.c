@@ -41,7 +41,11 @@ void loci_getWorldTransform(const cgltf_node* pNode, mat4 transform)
     glm_mat4_mul(transform, localTransform, transform);
 }
 
-void loci_createMeshModel(ecs_entity_t entity, const char* pDirectoryFilePath, const char* pFilePath)
+
+void loci_createMeshModel
+(ecs_entity_t entity, 
+const char* pDirectoryFilePath, const char* pFilePath,
+vec3 ambient, float roughness, float metallic, float reflection)
 {
     
     cgltf_options options;
@@ -409,7 +413,7 @@ void loci_createMeshModel(ecs_entity_t entity, const char* pDirectoryFilePath, c
                 mat4 identity;
                 glm_mat4_identity(identity);
                 loci_createMesh(meshEntity, pVertices, numVertices, pIndices, numIndices, identity);
-                loci_createMaterial(meshEntity, (vec3){0.6f,0.6f,0.6f}, 0.9f, 0.1f, 0.1f);
+                loci_createMaterial(meshEntity, ambient , roughness, metallic, reflection);
 
                 free(pIndices);
                 free(pVertices);

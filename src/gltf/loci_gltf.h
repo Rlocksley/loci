@@ -9,7 +9,10 @@
 
 
 
-void loci_createMeshModel(ecs_entity_t entity, const char* pDirectoryFilePath, const char* pFilePath);
+void loci_createMeshModel
+(ecs_entity_t entity, 
+const char* pDirectoryFilePath, const char* pFilePath,
+vec3 ambient, float roughness, float metallic, float reflection);
 void loci_spawnMeshModelInScene(ecs_entity_t entity, ecs_entity_t scene);
 void loci_despawnMeshModelInScene(ecs_entity_t entity, ecs_entity_t scene);
 void loci_destroyMeshModel(ecs_entity_t entity);

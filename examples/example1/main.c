@@ -56,7 +56,7 @@ int main()
     shape0.pIndices, shape0.numberIndices,
     identity);
     
-    loci_createTexture(sky, "/home/robin/Desktop/Github/Loki/src/test/Metal007_1K_Color.jpg");
+    loci_createTexture(sky, "/path/to/your/texture");
 
     ecs_entity_t baseCube = loci_createEntity();
     Loci_Cube cubeShape = loci_createCube(10, 10, 10, (vec3){0.8f, 0.8f, 0.8f});
@@ -65,7 +65,7 @@ int main()
     cubeShape.pVertices, cubeShape.numberVertices,
     cubeShape.pIndices, cubeShape.numberIndices,
     identity);
-    loci_createTexture(baseCube, "/home/robin/Desktop/Github/Loki/src/test/Bronze03_1K_BaseColor.png");
+    loci_createTexture(baseCube, "/path/to/your/texture");
 
     srand(time(NULL));
     ecs_entity_t cubes[numberCubes][numberCubes];

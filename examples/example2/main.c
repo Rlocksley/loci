@@ -26,15 +26,15 @@ int main()
 
 
     Loci_Shader genShader =  
-    loci_createShader("your/Path/to/loci/src/shaders/genShader.spv");
+    loci_createShader("/path/to/loci/src/shaders/genShader.spv");
     Loci_Shader missShader[3] = 
-    {loci_createShader("your/Path/to/loci/src/shaders/missShader.spv"),
-    loci_createShader("your/Path/to/loci/src/shaders/missShadowShader.spv"),
-    loci_createShader("your/Path/to/loci/src/shaders/missReflectionShader.spv")};
+    {loci_createShader("/path/to/loci/src/shaders/missShader.spv"),
+    loci_createShader("/path/to/loci/src/shaders/missShadowShader.spv"),
+    loci_createShader("/path/to/loci/src/shaders/missReflectionShader.spv")};
     Loci_Shader chitShader[3] = 
-    {loci_createShader("your/Path/to/loci/src/shaders/chitShader.spv"),
-    loci_createShader("your/Path/to/loci/src/shaders/chitShadowShader.spv"),
-    loci_createShader("your/Path/to/loci/loci/src/shaders/chitReflectionShader.spv")};
+    {loci_createShader("/path/to/loci/src/shaders/chitShader.spv"),
+    loci_createShader("/path/to/loci/src/shaders/chitShadowShader.spv"),
+    loci_createShader("/path/to/loci/src/shaders/chitReflectionShader.spv")};
 
 
     Loci_FlyingCamera camera = 
@@ -61,7 +61,7 @@ int main()
     shape0.pVertices,shape0.numberVertices,
     shape0.pIndices, shape0.numberIndices,
     identity);
-    loci_createTexture(sky, "filePath/to/your/texture");
+    loci_createTexture(sky, "/Path/to/your/texture");
 
 
     
@@ -75,8 +75,9 @@ int main()
     loci_createPointLight(light2, (vec3){1.f,1.f,1.f});
 
     ecs_entity_t model = loci_createEntity()
-    loci_createMeshModel(model,"filePath/to/your/GTLF/Directory/", 
-    "filePath/to/your/GTLF/Directory/file.gltf");
+    loci_createMeshModel(model,"/Path/to/your/GLTF/Directory/", 
+    "/Path/to/your/GLTF/File.gltf",
+    (vec3){0.6f,0.6f,0.6f}, 0.3f, 0.8f, 0.2f);
 
  
 
@@ -87,8 +88,6 @@ int main()
     loci_spawnInScene(light2, scene);
     loci_spawnMeshModelInScene(model, scene);
 
-    printf("before Loop\n");
-    bool isLight2 = false;
 
     //Loop
     while(loci_updateCore())
