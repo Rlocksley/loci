@@ -6,6 +6,20 @@ Low Overhead C Interface for RayTracing with Vulkan managed by Flecs
 1.] Linux\
 2.] Windows is not supported yet, but should be easy to port because all libaries used are cross platform
 
+### Installation
+1.] install GLFW\
+2.] install the Vulkan SDK\
+3.] clone cglm into ./loci/src
+
+### Building
+To build the engine and examples use these command:
+``` bash
+mkdir build
+cd build
+cmake ..
+make
+```
+
 ### Examples
 example 1.] shows the basic things you can do with loci\
 example 2.] shows how to load a  GLTF Mesh Model
