@@ -12,7 +12,7 @@ Low Overhead C Interface for RayTracing with Vulkan managed by Flecs
 3.] clone cglm into ./loci/src
 
 ### Building
-To build the engine and examples use these command:
+To build the loci and examples use these command:
 ``` bash
 mkdir build
 cd build
