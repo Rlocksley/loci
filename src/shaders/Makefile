@@ -10,7 +10,7 @@ Shaders:
 	./glslc --target-env=vulkan1.3 missShader.rmiss -o missShader.spv
 	./glslc --target-env=vulkan1.3 missShadowShader.rmiss -o missShadowShader.spv
 
-
+	./glslc --target-env=vulkan1.3 skeletonShader.comp -o skeletonShader.spv
 .PHONY:	loci_compile_shaders
 
 loci_compile_shaders: Shaders

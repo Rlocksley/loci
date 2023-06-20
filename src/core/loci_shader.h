@@ -11,6 +11,7 @@ typedef struct Loci_Shader
 
 extern char* loci_pShaderDirectory;
 
+extern Loci_Shader loci_skeletonShader;
 
 Loci_Shader loci_createShader(const char* filePath);
 void loci_destroyShader(Loci_Shader shader);

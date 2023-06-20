@@ -168,3 +168,71 @@ void loci_destroyRayPipeline(Loci_RayPipeline pipeline)
     pipeline.vkPipelineLayout,
     NULL);
 }
+
+
+
+Loci_SkeletonPipeline loci_createSkeletonPipeline
+(Loci_SkeletonDescriptorSet descriptorSet)
+{
+    Loci_SkeletonPipeline pipeline;
+
+    VkPipelineLayoutCreateInfo layoutInfo;
+    layoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    layoutInfo.flags = 0;
+    layoutInfo.setLayoutCount = 1;
+    layoutInfo.pSetLayouts = &descriptorSet.vkDescriptorSetLayout;
+    layoutInfo.pushConstantRangeCount = 0;
+    layoutInfo.pPushConstantRanges = NULL;
+    layoutInfo.pNext = NULL;
+
+    LOCI_CHECK_VULKAN
+    (vkCreatePipelineLayout
+    (loci_vkDevice,
+    &layoutInfo, NULL,
+    &pipeline.vkPipelineLayout),
+    "createSkeletonPipeline",
+    "vkCreatePipelineLayout")
+
+    VkPipelineShaderStageCreateInfo shaderInfo;
+    shaderInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    shaderInfo.flags = 0;
+    shaderInfo.stage = VK_SHADER_STAGE_COMPUTE_BIT;
+    shaderInfo.module = loci_createShaderModule(loci_skeletonShader);
+    shaderInfo.pName = "main";
+    shaderInfo.pSpecializationInfo = NULL;
+    shaderInfo.pNext = NULL;
+
+    VkComputePipelineCreateInfo createInfo;
+    createInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
+    createInfo.flags = 0;
+    createInfo.layout = pipeline.vkPipelineLayout;
+    createInfo.stage = shaderInfo;
+    createInfo.basePipelineIndex = -1;
+    createInfo.basePipelineHandle = NULL;
+    createInfo.pNext = NULL;
+
+    LOCI_CHECK_VULKAN
+    (vkCreateComputePipelines
+    (loci_vkDevice, NULL,
+    1, &createInfo, NULL,
+    &pipeline.vkPipeline),
+    "createSkeletonPipeline",
+    "vkCreateComputePipeline")
+
+    loci_destroyShaderModule(shaderInfo.module);
+
+    return pipeline;
+}
+
+void loci_destroySkeletonPipeline(Loci_SkeletonPipeline pipeline)
+{
+    vkDestroyPipeline
+    (loci_vkDevice,
+    pipeline.vkPipeline,
+    NULL);
+
+    vkDestroyPipelineLayout
+    (loci_vkDevice,
+    pipeline.vkPipelineLayout,
+    NULL);
+}

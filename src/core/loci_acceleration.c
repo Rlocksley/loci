@@ -139,7 +139,7 @@ void loci_updateTopAcceleration
 (Loci_TopAcceleration acceleration,
 Loci_BufferInterface instanceBuffer, 
 uint32_t numberInstances,
-bool animationUpdate, bool bottomAccelerationUpdate)
+bool skeletonUpdate)
 {
      VkDeviceOrHostAddressConstKHR instanceAddress;
     instanceAddress.deviceAddress = instanceBuffer.deviceAddress;
@@ -187,20 +187,11 @@ bool animationUpdate, bool bottomAccelerationUpdate)
 
     loci_endCommand(loci_topAccelerationUpdateVkCommandBuffer);
 
-    if(bottomAccelerationUpdate)
+    if(skeletonUpdate)
     {
         loci_submitCommand
         (VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR,
         loci_bottomAccelerationUpdateVkSemaphore,
-        loci_topAccelerationUpdateVkCommandBuffer,
-        loci_topAccelerationUpdateVkSemaphore,
-        NULL);
-    }
-    else if(animationUpdate)
-    {
-        loci_submitCommand
-        (VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR,
-        loci_animationUpdateVkSemaphore,
         loci_topAccelerationUpdateVkCommandBuffer,
         loci_topAccelerationUpdateVkSemaphore,
         NULL);

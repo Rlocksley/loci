@@ -4,7 +4,7 @@
 #include "loci_commandPool.h"
 
 extern VkCommandBuffer loci_buildVkCommandBuffer;
-extern VkCommandBuffer loci_animationUpdateVkCommandBuffer;
+extern VkCommandBuffer loci_skeletonUpdateVkCommandBuffer;
 extern VkCommandBuffer loci_bottomAccelerationUpdateVkCommandBuffer;
 extern VkCommandBuffer loci_topAccelerationUpdateVkCommandBuffer;
 extern VkCommandBuffer loci_drawVkCommandBuffer;

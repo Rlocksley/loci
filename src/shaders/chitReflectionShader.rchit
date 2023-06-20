@@ -99,24 +99,27 @@ void main()
     
     if(object.textureIndex > -1)
     {
-        uvPosition = vertex0.uv*barycentricCoords[0]+vertex1.uv*barycentricCoords[1]+vertex2.uv*barycentricCoords[2];
+        uvPosition = vertex0.uv.xy*barycentricCoords[0]+vertex1.uv.xy*barycentricCoords[1]+vertex2.uv.xy*barycentricCoords[2];
         hitColor = texture(textureSamplers[nonuniformEXT(int(object.textureIndex))], uvPosition).xyz;
     }
     else
     {
-        hitColor = vertex0.color*barycentricCoords[0]+vertex1.color*barycentricCoords[1]+vertex2.color*barycentricCoords[2];
+        hitColor = vertex0.color.xyz*barycentricCoords[0]+vertex1.color.xyz*barycentricCoords[1]+vertex2.color.xyz*barycentricCoords[2];
     }
 
-    vec3 hitPosition = vertex0.position*barycentricCoords[0]+vertex1.position*barycentricCoords[1]+vertex2.position*barycentricCoords[2];
+    vec3 hitPosition = vertex0.position.xyz*barycentricCoords[0]+vertex1.position.xyz*barycentricCoords[1]+vertex2.position.xyz*barycentricCoords[2];
     hitPosition = vec3(gl_ObjectToWorldEXT * vec4(hitPosition, 1.0));
     
-    vec3 hitNormal = vertex0.normal * barycentricCoords[0] + vertex1.normal * barycentricCoords[1] + vertex2.normal * barycentricCoords[2];
+    vec3 hitNormal = vertex0.normal.xyz * barycentricCoords[0] + vertex1.normal.xyz * barycentricCoords[1] + vertex2.normal.xyz * barycentricCoords[2];
     hitNormal = normalize(vec3(hitNormal * gl_WorldToObjectEXT));
 
     vec3 lightColor = vec3(1.0,1.0,1.0);
-    vec3 lightPosition = vec3(2.0, 2.0, 2.0);
     
-    payload.hitValue = 
-     PBR(hitPosition, hitNormal, normalize(hitPosition-camera.position.xyz), normalize(lightPosition-hitPosition), hitColor, object.roughness, object.metallic, object.ambient, payload.hitValue);
-
+    for(int i = 0; i < pushConstants.numberPointLights; i++)
+    {
+        payload.lightNumber = i;
+        payload.lightColor = vec3(0.f,0.f,0.f);
+        payload.hitValue += 
+        PBR(hitPosition, hitNormal, normalize(hitPosition-camera.position.xyz), normalize(pointLights.lights[i].translation.xyz-hitPosition), hitColor, object.roughness, object.metallic, object.ambient, payload.hitValue);
+    }
 }   

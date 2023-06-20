@@ -397,6 +397,8 @@ Loci_Buffer skeletonVertexBuffer, Loci_BufferInterface bonesBuffer)
     (loci_vkDevice,
     3, writeBuffer,
     0, VK_NULL_HANDLE);
+
+    return descriptorSet;
 }
 
 void loci_destroySkeletonDescriptorSet

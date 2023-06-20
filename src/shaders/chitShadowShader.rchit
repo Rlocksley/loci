@@ -60,7 +60,7 @@ void main()
 
     const vec3 barycentricCoords = vec3(1.0f - attribs.x - attribs.y, attribs.x, attribs.y);
 
-    vec3 hitPosition = vertex0.position*barycentricCoords[0]+vertex1.position*barycentricCoords[1]+vertex2.position*barycentricCoords[2];
+    vec3 hitPosition = vertex0.position.xyz*barycentricCoords[0]+vertex1.position.xyz*barycentricCoords[1]+vertex2.position.xyz*barycentricCoords[2];
     hitPosition = vec3(gl_ObjectToWorldEXT * vec4(hitPosition, 1.0));
         
     if(length(payload.hitPosition - hitPosition) > length(payload.hitPosition - pointLights.lights[payload.lightNumber].translation.xyz))

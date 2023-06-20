@@ -8,10 +8,10 @@
 
 typedef struct Loci_Vertex
 {
-    vec3 position;
-    vec3 normal;
-    vec3 color;
-    vec2 uv;
+    vec4 position;
+    vec4 normal;
+    vec4 color;
+    vec4 uv;
 }Loci_Vertex;
 
 

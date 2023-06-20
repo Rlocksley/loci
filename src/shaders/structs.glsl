@@ -17,10 +17,10 @@ struct Payload
 
 struct Vertex
 {
-    vec3 position;
-    vec3 normal;
-    vec3 color;
-    vec2 uv;
+    vec4 position;
+    vec4 normal;
+    vec4 color;
+    vec4 uv;
 };
 
 struct Object
@@ -38,4 +38,13 @@ struct PointLight
 {
     vec4 color;
     vec4 translation;
+};
+
+struct SkeletonVertex
+{
+    vec4 position;
+    vec4 normal;
+    ivec4 numberBones;
+    vec4 weights;
+    ivec4 boneNumbers;
 };

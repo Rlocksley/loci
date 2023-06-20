@@ -11,6 +11,10 @@
 #include "loci_texture.h"
 #include "loci_material.h"
 #include "loci_pointLight.h"
+#include "loci_animation.h"
+#include "loci_channel.h"
+#include "loci_bone.h"
+#include "loci_skeleton.h"
 
 typedef struct Loci_Object
 {
@@ -32,6 +36,12 @@ typedef struct Loci_PointLightObject
 typedef struct Loci_Scene
 {
 
+    uint32_t numberSkeletons;
+    VkAccelerationStructureGeometryKHR* pGeometries;
+    VkAccelerationStructureBuildGeometryInfoKHR* pBuildInfos;
+    VkAccelerationStructureBuildRangeInfoKHR* pRangeInfos;
+    VkAccelerationStructureBuildRangeInfoKHR** ppRangeInfos;
+    
     uint32_t numberInstances;
     Loci_BufferInterface objectBuffer;
     Loci_BufferInterface instanceBuffer;
@@ -50,6 +60,9 @@ typedef struct Loci_Scene
     Loci_ShaderTables shaderTables;
     uint32_t recordSize;
 
+    ecs_query_t* animationUpdateQuery;
+    ecs_query_t* skeletonUpdateQuery;
+    ecs_query_t* bottomAccelerationUpdateQuery;
     ecs_query_t* colorMeshInstanceUpdateQuery;
     ecs_query_t* textureMeshInstanceUpdateQuery;
     ecs_query_t* pointLightUpdateQuery;
@@ -58,8 +71,9 @@ typedef struct Loci_Scene
 }Loci_Scene;
 
 void loci_createScene(ecs_entity_t entity,
-uint32_t maxNumberMeshInstances,
-uint32_t maxNumberTexturesInstances,
+uint32_t maxNumberMeshes,
+uint32_t maxNumberTextures,
+uint32_t maxNumberSkeletons, 
 Loci_Shader generationShader,
 Loci_Shader missShaders[], uint32_t numberMissShaders,
 Loci_Shader closestHitShaders[], uint32_t numberClosestHitShaders,
@@ -69,5 +83,9 @@ void loci_spawnInScene(ecs_entity_t entity, ecs_entity_t scene);
 void loci_despawnInScene(ecs_entity_t entity, ecs_entity_t scene);
 void loci_drawScene(ecs_entity_t entity);
 void loci_destroyScene(ecs_entity_t entity);
+
+// helper functions
+void loci_updateAnimation
+(ecs_entity_t boneEntity, ecs_entity_t animationEntity, float time, mat4 globalTransform, Loci_Bones* pBones);
 
 #endif

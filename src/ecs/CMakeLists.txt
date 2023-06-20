@@ -13,6 +13,14 @@ loci_material.h
 loci_material.c
 loci_texture.h
 loci_texture.c
+loci_animation.h
+loci_animation.c
+loci_channel.h
+loci_channel.c
+loci_bone.h
+loci_bone.c
+loci_skeleton.h
+loci_skeleton.c
 loci_scene.h
 loci_scene.c
 loci_ecs.h

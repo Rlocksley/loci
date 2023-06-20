@@ -8,7 +8,7 @@ const char* loci_deviceExtensions[6] =
     "VK_KHR_ray_tracing_pipeline",
     "VK_KHR_deferred_host_operations",
     "VK_KHR_buffer_device_address",
-    "VK_EXT_descriptor_indexing"  
+    "VK_EXT_descriptor_indexing",
 };
 
 
@@ -53,6 +53,12 @@ void loci_createDevice()
         deviceQueueCreateInfo.pQueuePriorities = &queuePriority;
         deviceQueueCreateInfo.pNext = NULL;
 
+        
+        VkPhysicalDeviceMaintenance4Features maintenance4;
+        maintenance4.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES;
+        maintenance4.maintenance4 =  VK_TRUE;
+        maintenance4.pNext = NULL;
+        
         VkPhysicalDeviceVulkan12Features onetwoFeatures;
         onetwoFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
         onetwoFeatures.bufferDeviceAddress = VK_TRUE;
@@ -71,7 +77,7 @@ void loci_createDevice()
         onetwoFeatures.drawIndirectCount = VK_FALSE;
         onetwoFeatures.hostQueryReset = VK_FALSE;
         onetwoFeatures.imagelessFramebuffer = VK_FALSE;
-        onetwoFeatures.pNext = NULL;
+        onetwoFeatures.pNext = &maintenance4;
         onetwoFeatures.runtimeDescriptorArray = VK_TRUE;
         onetwoFeatures.samplerFilterMinmax = VK_FALSE;
         onetwoFeatures.samplerMirrorClampToEdge = VK_FALSE;

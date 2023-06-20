@@ -26,6 +26,7 @@ uint32_t numberClosestHitShaders)
     "createShaderTables",
     "vkGetRayTracingShaderGroupHandlesKHR")
 
+
     Loci_BufferInterface genShaderBufferInterface = 
     loci_createBufferInterface
     (1, handleSizeAligned, 
@@ -49,6 +50,7 @@ uint32_t numberClosestHitShaders)
     &shaderHandleStorage[0]+handleSizeAligned*(numberMissShaders+1), 
     handleSizeAligned * numberClosestHitShaders);
 
+
     tables.genShaderTableBuffer = 
     loci_createBuffer
     (1, handleSizeAligned,
@@ -62,10 +64,12 @@ uint32_t numberClosestHitShaders)
     VK_BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR);
     tables.chitShaderTableBuffer = 
     
+    tables.chitShaderTableBuffer = 
     loci_createBuffer
     (numberClosestHitShaders, handleSizeAligned,
     VK_BUFFER_USAGE_TRANSFER_DST_BIT |  
     VK_BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR);
+
 
     VkBufferCopy genBufferCopy;
     genBufferCopy.srcOffset = 0;
@@ -81,6 +85,7 @@ uint32_t numberClosestHitShaders)
     chitBufferCopy.srcOffset = 0;
     chitBufferCopy.dstOffset = 0;
     chitBufferCopy.size = handleSizeAligned * numberClosestHitShaders;
+
 
     loci_beginCommand(loci_buildVkCommandBuffer);
 
@@ -107,9 +112,14 @@ uint32_t numberClosestHitShaders)
     loci_submitSingleCommand
     (loci_buildVkCommandBuffer, loci_buildVkFence);
 
+
     loci_destroyBufferInterface(chitShaderBufferInterface);
     loci_destroyBufferInterface(missShaderBufferInterface);
     loci_destroyBufferInterface(genShaderBufferInterface);
+
+    #ifdef LOCI_DEBUG
+    LOCI_LOGI("ShaderTables", "created", "")
+    #endif
 
     return tables;
 }

@@ -4,6 +4,7 @@
 void loci_createScene(ecs_entity_t entity,
 uint32_t maxNumberInstances,
 uint32_t maxNumberImages,
+uint32_t maxNumberSkeletons,
 Loci_Shader generationShader,
 Loci_Shader missShaders[], uint32_t numberMissShaders,
 Loci_Shader closestHitShaders[], uint32_t numberClosestHitShaders,
@@ -38,7 +39,31 @@ uint32_t maxRecursionDepth)
     scene.pImages = (Loci_Image *)malloc(maxNumberImages * sizeof(Loci_Image));
     if (scene.pImages == NULL)
     {
-        LOCI_LOGE("createSceneContainer", "malloc() for pImages", "failed")
+        LOCI_LOGE("createScene", "malloc() for pImages", "failed")
+    }
+
+    scene.pGeometries = (VkAccelerationStructureGeometryKHR*) malloc(sizeof(VkAccelerationStructureGeometryKHR)*maxNumberSkeletons);
+    if(scene.pGeometries == NULL)
+    {
+        LOCI_LOGE("createScene", "malloc() for pGeometries", "failed")
+    }
+
+    scene.pBuildInfos = (VkAccelerationStructureBuildGeometryInfoKHR*) malloc(sizeof(VkAccelerationStructureBuildGeometryInfoKHR)*maxNumberSkeletons);
+    if(scene.pBuildInfos == NULL)
+    {
+        LOCI_LOGE("createScene", "malloc() for pBuildInfos", "failed")
+    }
+
+    scene.pRangeInfos = (VkAccelerationStructureBuildRangeInfoKHR*) malloc(sizeof(VkAccelerationStructureBuildRangeInfoKHR)*maxNumberSkeletons);
+    if(scene.pRangeInfos == NULL)
+    {
+        LOCI_LOGE("createScene", "malloc() for pRangeInfos", "failed")
+    }
+
+    scene.ppRangeInfos = (VkAccelerationStructureBuildRangeInfoKHR**) malloc(sizeof(VkAccelerationStructureBuildRangeInfoKHR*)*maxNumberSkeletons);
+    if(scene.ppRangeInfos == NULL)
+    {
+        LOCI_LOGE("createScene", "malloc() for ppRangeInfos", "failed")
     }
 
     scene.pointLightBuffer =
@@ -46,7 +71,6 @@ uint32_t maxRecursionDepth)
     (16, sizeof(Loci_PointLightObject),
     VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
 
-    printf("before topacceleration\n");
     scene.acceleration =
     loci_createTopAcceleration(scene.instanceBuffer, maxNumberInstances);
 
@@ -63,11 +87,48 @@ uint32_t maxRecursionDepth)
     scene.shaderTables =
     loci_createShaderTables(scene.pipeline, numberMissShaders, numberClosestHitShaders);
 
+    ECS_COMPONENT(loci_pWorld, Loci_Animation);
+    ECS_COMPONENT(loci_pWorld, Loci_Channel);
+    ECS_COMPONENT(loci_pWorld, Loci_Bone);
+    ECS_COMPONENT(loci_pWorld, Loci_Skeleton);
     ECS_COMPONENT(loci_pWorld, Loci_Transform);
     ECS_COMPONENT(loci_pWorld, Loci_Mesh);
     ECS_COMPONENT(loci_pWorld, Loci_Material);
     ECS_COMPONENT(loci_pWorld, Loci_Texture);
     ECS_COMPONENT(loci_pWorld, Loci_PointLight);
+
+    scene.animationUpdateQuery = 
+    ecs_query_init(loci_pWorld, &(ecs_query_desc_t)
+    {
+        .filter.terms = 
+        {
+            {ecs_id(Loci_Transform)},
+            {ecs_id(Loci_Animation)},
+            {ecs_id(Loci_Skeleton)},
+            {.id = ecs_pair(loci_spawnedIn, entity)}
+        }
+    });
+
+    scene.skeletonUpdateQuery = 
+    ecs_query_init(loci_pWorld, &(ecs_query_desc_t)
+    {
+        .filter.terms = 
+        {
+            {ecs_id(Loci_Skeleton)},
+            {.id = ecs_pair(loci_spawnedIn, entity)}
+        }
+    });
+
+    scene.bottomAccelerationUpdateQuery = 
+    ecs_query_init(loci_pWorld, &(ecs_query_desc_t)
+    {
+        .filter.terms = 
+        {
+            {ecs_id(Loci_Mesh)},
+            {ecs_id(Loci_Skeleton)},
+            {.id = ecs_pair(loci_spawnedIn, entity)}
+        }
+    });
 
     scene.colorMeshInstanceUpdateQuery =
     ecs_query_init(loci_pWorld, &(ecs_query_desc_t)
@@ -109,6 +170,10 @@ uint32_t maxRecursionDepth)
     });
 
     loci_set(entity, Loci_Scene, scene);
+
+    #ifdef LOCI_DEBUG
+    LOCI_LOGI("Scene", "created", "")
+    #endif
 }
 
 void loci_destroyScene(ecs_entity_t entity)
@@ -130,6 +195,11 @@ void loci_destroyScene(ecs_entity_t entity)
     loci_destroyTopAcceleration(scene.acceleration);
 
     loci_destroyBufferInterface(scene.pointLightBuffer);
+
+    free(scene.ppRangeInfos);
+    free(scene.pRangeInfos);
+    free(scene.pBuildInfos);
+    free(scene.pGeometries);
 
     free(scene.pImages);
 
@@ -156,6 +226,143 @@ void loci_updateScene(ecs_entity_t entity)
     ECS_COMPONENT(loci_pWorld, Loci_Material);
     ECS_COMPONENT(loci_pWorld, Loci_Texture);
     ECS_COMPONENT(loci_pWorld, Loci_PointLight);
+    
+    bool skeletonUpdate = false;
+    ecs_iter_t animationIt = ecs_query_iter(loci_pWorld, scene.animationUpdateQuery);
+    while(ecs_query_next(&animationIt))
+    {
+        Loci_Transform* transforms = ecs_field(&animationIt, Loci_Transform, 1);
+        Loci_Animation* animations = ecs_field(&animationIt, Loci_Animation, 2);
+        Loci_Skeleton*  skeletons = ecs_field(&animationIt, Loci_Skeleton, 3);
+    
+        for(int i = 0; i < animationIt.count; i++)
+        {
+            ecs_iter_t boneIt = ecs_children(loci_pWorld, animations[i].entity);
+            while(ecs_children_next(&boneIt))
+            {
+                for(int j = 0; j < boneIt.count; j++)
+                {
+                    loci_updateAnimation(boneIt.entities[j], animations[i].animation,
+                    animations[i].time, transforms[i].transform,
+                    (Loci_Bones*)skeletons[i].bonesBuffer.pMemory);
+                }
+            }
+        }
+        skeletonUpdate = true;
+    }
+
+    if(skeletonUpdate)
+    {
+        ecs_iter_t skeletonIt = ecs_query_iter(loci_pWorld, scene.skeletonUpdateQuery);
+        loci_beginCommand(loci_skeletonUpdateVkCommandBuffer);
+        while(ecs_query_next(&skeletonIt))
+        {
+            Loci_Skeleton* skeletons = ecs_field(&skeletonIt, Loci_Skeleton, 1);
+
+            for(int i = 0; i < skeletonIt.count; i++)
+            {   
+                vkCmdBindPipeline
+                (loci_skeletonUpdateVkCommandBuffer,
+                VK_PIPELINE_BIND_POINT_COMPUTE,
+                skeletons[i].pipeline.vkPipeline);
+
+                vkCmdBindDescriptorSets
+                (loci_skeletonUpdateVkCommandBuffer,
+                VK_PIPELINE_BIND_POINT_COMPUTE,
+                skeletons[i].pipeline.vkPipelineLayout,
+                0,1, &skeletons[i].descriptorSet.vkDescriptorSet,
+                0, NULL);
+
+                vkCmdDispatch
+                (loci_skeletonUpdateVkCommandBuffer,
+                skeletons[i].vertexBuffer.numberElements,1,1); 
+            }
+        }
+    
+        loci_endCommand(loci_skeletonUpdateVkCommandBuffer);
+        loci_submitCommand
+        (VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+        loci_imageIndexVkSemaphore,
+        loci_skeletonUpdateVkCommandBuffer,
+        loci_skeletonUpdateVkSemaphore, NULL);
+
+        uint32_t numberSkeletons = 0;
+        ecs_iter_t bottomAccIter = ecs_query_iter(loci_pWorld, scene.bottomAccelerationUpdateQuery);
+        while(ecs_query_next(&bottomAccIter))
+        {
+            Loci_Mesh* meshes = ecs_field(&bottomAccIter, Loci_Mesh, 1);
+            Loci_Skeleton* skeletons = ecs_field(&bottomAccIter, Loci_Skeleton, 2);
+
+            for(int i = 0; i < bottomAccIter.count; i++)
+            {
+                VkDeviceOrHostAddressConstKHR vertexAddress;
+                vertexAddress.deviceAddress = meshes[i].vertexBuffer.deviceAddress;
+                VkDeviceOrHostAddressConstKHR indexAddress;
+                indexAddress.deviceAddress = meshes[i].indexBuffer.deviceAddress;
+                VkDeviceOrHostAddressConstKHR transformAddress;
+                transformAddress.deviceAddress = meshes[i].transformBuffer.deviceAddress;
+
+                VkAccelerationStructureGeometryKHR geometry;
+                geometry.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
+                geometry.flags = VK_GEOMETRY_OPAQUE_BIT_KHR;
+                geometry.geometryType = VK_GEOMETRY_TYPE_TRIANGLES_KHR;
+                geometry.geometry.triangles.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR;
+                geometry.geometry.triangles.vertexFormat = VK_FORMAT_R32G32B32_SFLOAT;
+                geometry.geometry.triangles.vertexData = vertexAddress;
+                geometry.geometry.triangles.maxVertex = meshes[i].vertexBuffer.numberElements;
+                geometry.geometry.triangles.vertexStride = meshes[i].vertexBuffer.elementSize;
+                geometry.geometry.triangles.indexType = VK_INDEX_TYPE_UINT32;
+                geometry.geometry.triangles.indexData = indexAddress;
+                geometry.geometry.triangles.transformData = transformAddress;
+                geometry.geometry.triangles.pNext = NULL;
+                geometry.pNext = NULL;
+
+                scene.pGeometries[numberSkeletons] = geometry;
+
+                VkAccelerationStructureBuildGeometryInfoKHR buildInfo;
+                buildInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR;
+                buildInfo.type = VK_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR;
+                buildInfo.flags = VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR | VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR;
+                buildInfo.mode = VK_BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR;
+                buildInfo.srcAccelerationStructure = meshes[i].acceleration.vkAccelerationStructureKHR;
+                buildInfo.dstAccelerationStructure = meshes[i].acceleration.vkAccelerationStructureKHR;
+                buildInfo.geometryCount = 1;
+                buildInfo.pGeometries = &scene.pGeometries[numberSkeletons];
+                buildInfo.ppGeometries = NULL;
+                buildInfo.scratchData.deviceAddress = meshes[i].acceleration.scratchBuffer.deviceAddress;
+                buildInfo.pNext = NULL;
+
+                scene.pBuildInfos[numberSkeletons] = buildInfo;
+
+                VkAccelerationStructureBuildRangeInfoKHR rangeInfo;
+                rangeInfo.primitiveCount = meshes[i].indexBuffer.numberElements/3;
+                rangeInfo.primitiveOffset = 0;
+                rangeInfo.firstVertex = 0;
+                rangeInfo.transformOffset = 0;
+
+                scene.pRangeInfos[numberSkeletons++] = rangeInfo;
+            }
+        }
+        
+        for(uint32_t i = 0; i < numberSkeletons; i++)
+        {
+            scene.ppRangeInfos[i] = &scene.pRangeInfos[i];
+        }
+        loci_beginCommand(loci_bottomAccelerationUpdateVkCommandBuffer);
+
+        loci_vkCmdBuildAccelerationStructuresKHR
+        (loci_bottomAccelerationUpdateVkCommandBuffer,
+        numberSkeletons,
+        scene.pBuildInfos,
+        (const VkAccelerationStructureBuildRangeInfoKHR**)scene.ppRangeInfos);
+
+        loci_endCommand(loci_bottomAccelerationUpdateVkCommandBuffer);
+        loci_submitCommand
+        (VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR,
+        loci_skeletonUpdateVkSemaphore,
+        loci_bottomAccelerationUpdateVkCommandBuffer,
+        loci_bottomAccelerationUpdateVkSemaphore, NULL);
+    }
 
     ecs_iter_t colorMeshIt = ecs_query_iter(loci_pWorld, scene.colorMeshInstanceUpdateQuery);
     while (ecs_query_next(&colorMeshIt))
@@ -270,9 +477,9 @@ void loci_updateScene(ecs_entity_t entity)
         }
     }
 
-    printf("numberInstances:    %u\n", numberInstances);
-    printf("numberImages:    %u\n", numberImages);
-    printf("numberPointLights: %u\n", numberPointLights);
+    //printf("numberInstances:    %u\n", numberInstances);
+    //printf("numberImages:    %u\n", numberImages);
+    //printf("numberPointLights: %u\n", numberPointLights);
 
     scene.numberImages = numberImages;
     scene.numberInstances = numberInstances;
@@ -289,7 +496,7 @@ void loci_updateScene(ecs_entity_t entity)
         loci_updateTopAcceleration
         (scene.acceleration, 
         scene.instanceBuffer, scene.numberInstances,
-        false, false);
+        skeletonUpdate);
 
         scene.descriptorSet = loci_updateRayDescriptorSet2
         (scene.descriptorSet, scene.acceleration,
@@ -306,7 +513,7 @@ void loci_updateScene(ecs_entity_t entity)
         loci_updateTopAcceleration
         (scene.acceleration, 
         scene.instanceBuffer, scene.numberInstances,
-        false, false);
+        skeletonUpdate);
     
         loci_updateRayDescriptorSet
         (scene.descriptorSet,
@@ -536,4 +743,160 @@ void loci_drawScene(ecs_entity_t entity)
     loci_presentCommand(loci_drawVkSemaphore);
 
     loci_waitForFence(&loci_drawVkFence);
+}
+
+
+//helper Functions
+float loci_getScaleFactor(float minTime, float maxTime, float time)
+{
+    float midTime = time - minTime;
+    float timeDiff = maxTime - minTime;
+    return midTime/timeDiff; 
+}
+
+void loci_interpolateScale(float time, Loci_KeyFrameScale* pScales, uint32_t numberScales, mat4 outTransform)
+{
+    glm_mat4_identity(outTransform);
+    if(numberScales == 1)
+    {
+        glm_scale(outTransform, pScales[0].scale);
+        return;
+    }
+
+    bool foundTime = false;
+    uint32_t maxIndex;
+    uint32_t minIndex;
+    for(uint32_t i = 1; i < numberScales; i++)
+    {
+        if(time < pScales[i].time)
+        {
+            maxIndex = i;
+            minIndex = i-1;
+            foundTime = true;
+            break;
+        }
+    }
+    if(!foundTime)
+    {
+        LOCI_LOGE("interpolateScale", "time out of range", "")
+    }
+
+    float scaleFactor = loci_getScaleFactor(pScales[minIndex].time, pScales[maxIndex].time, time);
+
+    vec3 scale;
+    glm_vec3_lerp(pScales[minIndex].scale, pScales[maxIndex].scale, scaleFactor, scale);
+
+    glm_scale(outTransform, scale);
+}
+
+void loci_interpolateRotation(float time, Loci_KeyFrameRotation* pRotations, uint32_t numberRotations, mat4 outTransform)
+{
+    glm_mat4_identity(outTransform);
+    if(numberRotations == 1)
+    {
+        glm_quat_rotate(outTransform, pRotations[0].rotation, outTransform);
+        return;
+    }
+
+    bool foundTime = false;
+    uint32_t maxIndex;
+    uint32_t minIndex;
+    for(uint32_t i = 1; i < numberRotations; i++)
+    {
+        if(time < pRotations[i].time)
+        {
+            maxIndex = i;
+            minIndex = i-1;
+            foundTime = true;
+            break;
+        }
+    }
+    if(!foundTime)
+    {
+        LOCI_LOGE("interpolateRotation", "time out of range", "")
+    }
+
+    float scaleFactor = loci_getScaleFactor(pRotations[minIndex].time, pRotations[maxIndex].time, time);
+
+    versor rotation;
+    glm_quat_slerp(pRotations[minIndex].rotation, pRotations[maxIndex].rotation, scaleFactor, rotation);
+
+    glm_quat_rotate(outTransform, rotation, outTransform);
+}
+
+void loci_interpolatePosition(float time, Loci_KeyFramePosition* pPositions, uint32_t numberPositions, mat4 outTransform)
+{
+    glm_mat4_identity(outTransform);
+    if(numberPositions == 1)
+    {
+        glm_translate(outTransform, pPositions[0].position);
+        return;
+    }
+
+    bool foundTime = false;
+    uint32_t maxIndex;
+    uint32_t minIndex;
+    for(uint32_t i = 1; i < numberPositions; i++)
+    {
+        if(time < pPositions[i].time)
+        {
+            maxIndex = i;
+            minIndex = i-1;
+            foundTime = true;
+            break;
+        }
+    }
+    if(!foundTime)
+    {
+        LOCI_LOGE("interpolatePosition", "time out of range", "")
+    }
+
+    float scaleFactor = loci_getScaleFactor(pPositions[minIndex].time, pPositions[maxIndex].time, time);
+
+    vec3 position;
+    glm_vec3_lerp(pPositions[minIndex].position, pPositions[maxIndex].position, scaleFactor, position);
+
+    glm_translate(outTransform, position);
+}
+
+void loci_getChannelTransform(float time, const Loci_Channel* pChannel, mat4 outTransform)
+{
+    mat4 scale;
+    loci_interpolateScale(time, pChannel->pScales, pChannel->numberScales, scale);
+    mat4 rotation;
+    loci_interpolateRotation(time, pChannel->pRotations, pChannel->numberRotations, rotation);
+    mat4 position;
+    loci_interpolatePosition(time, pChannel->pPositions, pChannel->numberPositions, position);
+
+    glm_mat4_identity(outTransform);
+    glm_mat4_mul(rotation, scale, outTransform);
+    glm_mat4_mul(position, outTransform, outTransform);
+}
+
+void loci_updateAnimation
+(ecs_entity_t boneEntity, ecs_entity_t animationEntity, float time, mat4 globalTransform, Loci_Bones* pBones)
+{
+    mat4 globalTransform2;
+    glm_mat4_copy(globalTransform, globalTransform2);
+
+    const Loci_Channel* pChannel;
+    loci_getPairSecond(boneEntity, animationEntity, Loci_Channel, pChannel)
+
+    mat4 transform;
+    loci_getChannelTransform(time, pChannel, transform);
+    glm_mat4_mul(globalTransform2, transform, globalTransform2);
+
+    Loci_Bone* pBone;
+    loci_get_mut(boneEntity, Loci_Bone, pBone);
+
+    glm_mat4_mul(globalTransform2, pBone->inverse, pBones->bones[pBone->index]);
+
+    ecs_iter_t it = ecs_children(loci_pWorld, boneEntity);
+    while(ecs_children_next(&it))
+    {
+        for(int i = 0; i < it.count; i++)
+        {
+            loci_updateAnimation(it.entities[i], animationEntity, time, globalTransform2, pBones);
+        }
+    }
 }

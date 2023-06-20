@@ -7,15 +7,21 @@
 #include "../core/loci_descriptorSet.h"
 #include "../core/loci_pipeline.h"
 #include "../core/loci_world.h"
+#include "loci_mesh.h"
 
 typedef struct Loci_SkeletonVertex
 {
-    vec3 position;
-    vec3 normal;
-    ivec2 numberBones;
+    vec4 position;
+    vec4 normal;
+    ivec4 numberBones;
     vec4 weights;
     ivec4 boneNumbers;
 }Loci_SkeletonVertex;
+
+typedef struct Loci_Bones
+{
+    mat4 bones[256];
+}Loci_Bones;
 
 typedef struct Loci_Skeleton
 {
@@ -23,7 +29,7 @@ typedef struct Loci_Skeleton
     Loci_BufferInterface bonesBuffer;
     Loci_SkeletonDescriptorSet descriptorSet;
     Loci_SkeletonPipeline pipeline;
-}Loci_SkeletonMesh;
+}Loci_Skeleton;
 
 void loci_createSkeleton(ecs_entity_t entity, 
 Loci_SkeletonVertex* vertices, uint32_t numberVertices, 

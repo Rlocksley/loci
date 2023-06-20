@@ -4,7 +4,7 @@
 #include "loci_device.h"
 
 extern VkSemaphore loci_imageIndexVkSemaphore;
-extern VkSemaphore loci_animationUpdateVkSemaphore;
+extern VkSemaphore loci_skeletonUpdateVkSemaphore;
 extern VkSemaphore loci_bottomAccelerationUpdateVkSemaphore;
 extern VkSemaphore loci_topAccelerationUpdateVkSemaphore;
 extern VkSemaphore loci_drawVkSemaphore;

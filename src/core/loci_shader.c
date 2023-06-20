@@ -2,6 +2,9 @@
 
 char* loci_pShaderDirectory;
 
+Loci_Shader loci_skeletonShader;
+
+
 Loci_Shader loci_createShader(const char* pShaderName)
 {
 

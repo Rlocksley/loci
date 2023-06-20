@@ -21,7 +21,7 @@ int main()
     loci_maxNumberStorageImages = 10;
     loci_maxNumberTopAccelerations = 1;
     loci_maxNumberDescriptorSets = 10;
-    loci_pShaderDirectory = "/your/path/to/shader/directory";
+    loci_pShaderDirectory = "/home/robin/Desktop/Github/loci/src/shaders";
 
     loci_createCore();
 
@@ -45,7 +45,7 @@ int main()
     //Scene
     ecs_entity_t scene = loci_createEntity()
     loci_createScene(scene,
-    10001,10001,
+    10001,10001,0,
     genShader, missShader, 3, chitShader, 3, 4);
 
     mat4 identity;
@@ -61,22 +61,24 @@ int main()
     shape0.pVertices,shape0.numberVertices,
     shape0.pIndices, shape0.numberIndices,
     identity);
-    loci_createTexture(sky, "/your/texture/filePath");
+    loci_createTexture(sky, "/home/robin/Desktop/Github/Loki/src/test/Metal007_1K_Color.jpg");
 
-
+    printf("before Light\n");
     
 
     ecs_entity_t light = loci_createEntity()
     loci_createTransform(light, (vec3){1.f,1.f,1.f}, 0.f, (vec3){0.f,1.f,0.f},(vec3){0.f, -100.f, 0.f});
-    loci_createPointLight(light, (vec3){1.f,1.f,1.f});
+    loci_createPointLight(light, (vec3){0.5f,0.5f,0.5f});
 
     ecs_entity_t light2 = loci_createEntity()
     loci_createTransform(light2, (vec3){1.f,1.f,1.f}, 0.f, (vec3){0.f,1.f,0.f},(vec3){0.f, -2.f, -0.f});
-    loci_createPointLight(light2, (vec3){1.f,1.f,1.f});
+    loci_createPointLight(light2, (vec3){0.5f,0.5f,0.5f});
+
+    printf("before Model\n");
 
     ecs_entity_t model = loci_createEntity()
-    loci_createMeshModel(model,"/your/GLTF/Model/Directory/", 
-    "/your/GLTF/model.gltf",
+    loci_createMeshModel(model,"/home/robin/Desktop/GLTF_Models/sponza/", 
+    "/home/robin/Desktop/GLTF_Models/sponza/scene.gltf",
     (vec3){0.6f,0.6f,0.6f}, 0.01f, 0.9f, 0.9f);
 
  
@@ -85,7 +87,7 @@ int main()
     //spawn
     loci_spawnInScene(sky, scene);
     loci_spawnInScene(light, scene);
-    loci_spawnInScene(light2, scene);
+    //loci_spawnInScene(light2, scene);
     loci_spawnMeshModelInScene(model, scene);
 
 

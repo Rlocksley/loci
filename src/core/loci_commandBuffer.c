@@ -2,7 +2,7 @@
 
 
 VkCommandBuffer loci_buildVkCommandBuffer;
-VkCommandBuffer loci_animationUpdateVkCommandBuffer;
+VkCommandBuffer loci_skeletonUpdateVkCommandBuffer;
 VkCommandBuffer loci_bottomAccelerationUpdateVkCommandBuffer;
 VkCommandBuffer loci_topAccelerationUpdateVkCommandBuffer;
 VkCommandBuffer loci_drawVkCommandBuffer;

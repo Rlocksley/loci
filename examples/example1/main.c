@@ -20,7 +20,7 @@ int main()
     loci_maxNumberStorageImages = 10;
     loci_maxNumberTopAccelerations = 1;
     loci_maxNumberDescriptorSets = 10;
-    loci_pShaderDirectory = "/your/path/to/shader/directory";
+    loci_pShaderDirectory = "/home/robin/Desktop/Github/loci/src/shaders";
 
     loci_createCore();
 
@@ -57,16 +57,16 @@ int main()
     shape0.pIndices, shape0.numberIndices,
     identity);
     
-    loci_createTexture(sky, "/your/path/to/texture");
+    loci_createTexture(sky, "/home/robin/Desktop/Github/Loki/src/test/Bronze03_1K_BaseColor.png");
 
     ecs_entity_t baseCube = loci_createEntity();
     Loci_Cube cubeShape = loci_createCube(10, 10, 10, (vec3){0.8f, 0.8f, 0.8f});
-    loci_createMaterial(baseCube,(vec3){0.8,0.9,0.9}, 1.f, 1.f, 0.1f);
+    loci_createMaterial(baseCube,(vec3){0.8,0.9,0.9}, 1.f, 1.f, 0.8f);
     loci_createMesh(baseCube,
     cubeShape.pVertices, cubeShape.numberVertices,
     cubeShape.pIndices, cubeShape.numberIndices,
     identity);
-    loci_createTexture(baseCube, "/your/path/to/texture");
+    loci_createTexture(baseCube, "/home/robin/Desktop/Github/Loki/src/test/Metal007_1K_Color.jpg");
 
     srand(time(NULL));
     ecs_entity_t cubes[numberCubes][numberCubes];
@@ -96,7 +96,7 @@ int main()
 
     ecs_entity_t scene = loci_createEntity()
     loci_createScene(scene,
-    10001,10001,
+    10001,10001, 0,
     genShader, missShader, 3, chitShader, 3, 4);
 
 
@@ -148,6 +148,7 @@ int main()
 
     loci_destroyTexture(baseCube);
     loci_destroyMesh(baseCube);
+    loci_destroyCube(cubeShape);
 
     loci_destroyTexture(sky);
     loci_destroyMesh(sky);

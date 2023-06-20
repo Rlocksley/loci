@@ -21,7 +21,7 @@ void loci_createCore()
 
     //Vulkan Sync
     loci_createSemaphore(&loci_imageIndexVkSemaphore);
-    loci_createSemaphore(&loci_animationUpdateVkSemaphore);
+    loci_createSemaphore(&loci_skeletonUpdateVkSemaphore);
     loci_createSemaphore(&loci_bottomAccelerationUpdateVkSemaphore);
     loci_createSemaphore(&loci_topAccelerationUpdateVkSemaphore);
     loci_createSemaphore(&loci_drawVkSemaphore);
@@ -31,7 +31,7 @@ void loci_createCore()
     //Vulkan Command
     loci_createCommandPool();
     loci_createCommandBuffer(&loci_buildVkCommandBuffer);
-    loci_createCommandBuffer(&loci_animationUpdateVkCommandBuffer);
+    loci_createCommandBuffer(&loci_skeletonUpdateVkCommandBuffer);
     loci_createCommandBuffer(&loci_bottomAccelerationUpdateVkCommandBuffer);
     loci_createCommandBuffer(&loci_topAccelerationUpdateVkCommandBuffer);
     loci_createCommandBuffer(&loci_drawVkCommandBuffer);
@@ -50,10 +50,16 @@ void loci_createCore()
 
     //Flecs World
     loci_createWorld()
+
+    //Skeleton Shader
+    loci_skeletonShader = loci_createShader("skeletonShader.spv");
 }
 
 void loci_destroyCore()
 {
+    //Skeleton Shader
+    loci_destroyShader(loci_skeletonShader);
+
     //Flecs World
     loci_destroyWorld()
 
@@ -70,7 +76,7 @@ void loci_destroyCore()
     loci_destroyCommandBuffer(&loci_drawVkCommandBuffer);
     loci_destroyCommandBuffer(&loci_topAccelerationUpdateVkCommandBuffer);
     loci_destroyCommandBuffer(&loci_bottomAccelerationUpdateVkCommandBuffer);
-    loci_destroyCommandBuffer(&loci_animationUpdateVkCommandBuffer);
+    loci_destroyCommandBuffer(&loci_skeletonUpdateVkCommandBuffer);
     loci_destroyCommandBuffer(&loci_buildVkCommandBuffer);
     loci_destroyCommandPool();
 
@@ -80,7 +86,7 @@ void loci_destroyCore()
     loci_destroySemaphore(loci_drawVkSemaphore);
     loci_destroySemaphore(loci_topAccelerationUpdateVkSemaphore);
     loci_destroySemaphore(loci_bottomAccelerationUpdateVkSemaphore);
-    loci_destroySemaphore(loci_animationUpdateVkSemaphore);
+    loci_destroySemaphore(loci_skeletonUpdateVkSemaphore);
     loci_destroySemaphore(loci_imageIndexVkSemaphore);
 
     //Vulkan Present

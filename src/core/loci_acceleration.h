@@ -21,7 +21,7 @@ void loci_updateTopAcceleration
 (Loci_TopAcceleration acceleration,
 Loci_BufferInterface instanceBuffer, 
 uint32_t numberInstances,
-bool animationUpdate, bool bottomAccelerationUpdate);
+bool skeletonUpdate);
 
 
 typedef struct Loci_BottomAcceleration

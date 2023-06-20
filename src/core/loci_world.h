@@ -75,6 +75,18 @@ extern ecs_entity_t loci_isModelOfTexture;
     ecs_add_pair(loci_pWorld, entity0, pairEntity, entity1);\
 }
 
+#define loci_setPairSecond(entity0, entity1, componentType, componentValue)\
+{\
+    ECS_COMPONENT(loci_pWorld, componentType);\
+    ecs_set_id(loci_pWorld, entity0, ecs_pair(entity1, ecs_id(componentType)), sizeof(componentType), &componentValue);\
+}
+
+#define loci_getPairSecond(entity0, entity1, componentType, pComponentValue)\
+{\
+    ECS_COMPONENT(loci_pWorld, componentType);\
+    pComponentValue = ecs_get_pair_second(loci_pWorld, entity0, entity1, componentType);\
+}
+
 #define loci_removePair(entity0, pairEntity, entity1)\
 {\
     ecs_remove_pair(loci_pWorld, entity0, pairEntity, entity1);\
