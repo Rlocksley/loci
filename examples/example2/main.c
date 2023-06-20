@@ -21,7 +21,7 @@ int main()
     loci_maxNumberStorageImages = 10;
     loci_maxNumberTopAccelerations = 1;
     loci_maxNumberDescriptorSets = 10;
-    loci_pShaderDirectory = "/home/robin/Desktop/Github/loci/src/shaders";
+    loci_pShaderDirectory = "/path/to/your/shader/directory";
 
     loci_createCore();
 
