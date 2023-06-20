@@ -61,9 +61,8 @@ int main()
     shape0.pVertices,shape0.numberVertices,
     shape0.pIndices, shape0.numberIndices,
     identity);
-    loci_createTexture(sky, "/home/robin/Desktop/Github/Loki/src/test/Metal007_1K_Color.jpg");
+    loci_createTexture(sky, "/path/to/your/texture");
 
-    printf("before Light\n");
     
 
     ecs_entity_t light = loci_createEntity()
@@ -77,8 +76,8 @@ int main()
     printf("before Model\n");
 
     ecs_entity_t model = loci_createEntity()
-    loci_createMeshModel(model,"/home/robin/Desktop/GLTF_Models/sponza/", 
-    "/home/robin/Desktop/GLTF_Models/sponza/scene.gltf",
+    loci_createMeshModel(model,"/path/to/gltf/directory/", 
+    "/path/to/your/gltf/file.gltf",
     (vec3){0.6f,0.6f,0.6f}, 0.01f, 0.9f, 0.9f);
 
  

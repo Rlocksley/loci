@@ -21,7 +21,7 @@ int main()
     loci_maxNumberStorageImages = 10;
     loci_maxNumberTopAccelerations = 1;
     loci_maxNumberDescriptorSets = 10;
-    loci_pShaderDirectory = "/home/robin/Desktop/Github/loci/src/shaders";
+    loci_pShaderDirectory = "/path/to/your/shader/directory";
 
     loci_createCore();
 
@@ -61,7 +61,7 @@ int main()
     shape0.pVertices,shape0.numberVertices,
     shape0.pIndices, shape0.numberIndices,
     identity);
-    loci_createTexture(sky, "/home/robin/Desktop/Github/Loki/src/test/Bronze03_1K_BaseColor.png");
+    loci_createTexture(sky, "/path/to/your/texture");
     loci_spawnInScene(sky, scene);
 
     ecs_entity_t light = loci_createEntity()
@@ -77,7 +77,7 @@ int main()
     loci_createMesh(floor, 
     cube.pVertices, cube.numberVertices, cube.pIndices, cube.numberIndices, identity);
     loci_createMaterial(floor, (vec3){0.5f,0.5f,0.5f}, 0.1f, 0.8f, 0.5f);
-    loci_createTexture(floor, "/home/robin/Desktop/Github/Loki/src/test/rustediron1-alt2-bl/rustediron2_basecolor.png");
+    loci_createTexture(floor, "/path/to/your/texture");
     loci_spawnInScene(floor, scene);
 
     ecs_entity_t snake = loci_createEntity();
@@ -129,7 +129,7 @@ int main()
     loci_destroyMaterial(floor);
     loci_destroyMesh(floor);
     loci_destroyTransform(floor);
-
+    loci_destroyCube(cube);
 
     loci_destroyPointLight(light);
     loci_destroyTransform(light);
